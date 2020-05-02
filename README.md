@@ -1,13 +1,14 @@
 # DENC
 DENC - Free, Fast, Simple and Mass file encryption and decryption Tool using AES 256 CBC encryption
 <hr>
+
 # Usage :
-	>php denc.php <dec/enc> <password> <files_selection_regex_pattern>
+	>>php denc.php <dec/enc> <password> <files_selection_regex_pattern>
 
 # Example : 
-	>php denc.php enc testpass ./htdoc/*.html
-	>php denc.php dec otherpass home/txts/*.txt
-	>php denc.php enc anotherpass /web/backup.zip
+	>>php denc.php enc testpass ./htdoc/*.html
+	>>php denc.php dec otherpass home/txts/*.txt
+	>>php denc.php enc anotherpass /web/backup.zip
 
 # NOTE : 
 	+ NEVER DONT TRY TO DELETE `.dont-remove.conf` FILES IN WORKING DIRCTORIES.
