@@ -1,5 +1,6 @@
 # DENC
 DENC - Free, Fast, Simple and Mass file encryption and decryption Tool using AES 256 CBC encryption
+under MIT License
 <hr>
 
 # Usage :
