@@ -1,11 +1,11 @@
 <?php
 /****************************************************************** 
- *	ＤＤＤＤＤ  		ＥＥＥＥＥＥ	  ＮＮＮ      ＮＮ 	    CCCCCCC  *
- *	ＤＤ ＤＤＤ 		ＥＥ 	   		 ＮＮＮＮ     ＮＮ 	 CCCC       *
- *	ＤＤ    ＤＤ	 ＥＥＥＥＥ 		ＮＮ  ＮＮ   ＮＮ    CCC         *
- *	ＤＤ    ＤＤ	 ＥＥＥＥＥ 	    ＮＮ   ＮＮ  ＮＮ    CCC         *
- *	ＤＤ ＤＤＤ 		ＥＥ 			 ＮＮ     ＮＮＮＮ 	 CCCC       *
- *	ＤＤＤＤＤ  		ＥＥＥＥＥＥ	  ＮＮ       ＮＮＮ 	    CCCCCCC  *
+ *	ＤＤＤＤＤ  		ＥＥＥＥＥＥ	     ＮＮＮ     ＮＮ     CCCCCCC  *
+ *	ＤＤ ＤＤＤ 		ＥＥ 	            ＮＮＮＮ   ＮＮ    CCCC       *
+ *	ＤＤ    ＤＤ	 ＥＥＥＥＥ	      ＮＮ ＮＮ  ＮＮ    CCC         *
+ *	ＤＤ    ＤＤ	 ＥＥＥＥＥ	      ＮＮ  ＮＮ ＮＮ    CCC         *
+ *	ＤＤ ＤＤＤ 		ＥＥ 	            ＮＮ   ＮＮＮＮ 	 CCCC       *
+ *	ＤＤＤＤＤ  		ＥＥＥＥＥＥ	     ＮＮ     ＮＮＮ     CCCCCCC  *
  ****************************************************************** 
  *	Free, Fast, Simple and Mass file encryption and decryption Tool
  *	 	using AES 256 CBC encryption.
@@ -103,12 +103,12 @@ function isCryptionKeyValid(string $current_decrypted_file,string $current_decry
 	$out = false;
 	switch ($caller_crypto_method) {
 		case 'Encrypt':
-			$crypt_history[$current_decrypted_file] = $current_decrypted_md5;
+			$crypt_history[$file_name] = $current_decrypted_md5;
 			setDirectoryCryptionHistory($directory,$crypt_history);
 			$out = true;
 			break;
 		case 'Decrypt':
-			$orginal_file_md5 = $crypt_history[$current_decrypted_file];
+			$orginal_file_md5 = $crypt_history[$file_name];
 			$out = ( $orginal_file_md5 == $current_decrypted_md5 );
 			break;
 	}
