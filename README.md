@@ -2,7 +2,7 @@
 DENC - Free, Fast, Simple and Mass file encryption and decryption Tool using AES 256 CBC encryption
 under MIT License
 
-#LatestVerison
+# LatestVerison
 V 1.2
 Bug Fixed : Target file suppose to have a valid length not the zero , then its allowed to remove the source file.
 New Feature : Set a mechanism to keep the file modification time unchanged after the Encrypt/Decrypt.
