@@ -29,7 +29,7 @@ $intro = '
  *			not the zero , then its allowed to remove the source file
  *		+ set a mechanism to keep the file modification time 
  *			unchanged after the Encrypt/Decrypt
- *		+ performing better interact cli
+ *		+ performing better intract cli with the user
  *******************************************************************
  *	Version 1.1 
  *		+ a full of bug script which i suppose to fix them in the
@@ -104,9 +104,9 @@ function keepLastModifiedTime(string &$source_file_path,string &$target_file_pat
  *	The CLI Countdown to inform the user for source file removing
  */
 function rmCountDown(int $time_by_second=5) {
-	echo "\tRemoving orginal File on "
+	echo "\tRemoving orginal File on ";
 	for(;$time_by_second>0;$time_by_second--){
-		echo $time_by_second;
+		echo $time_by_second."\t";
 		sleep(1);
 	}
 	echo "\n";
