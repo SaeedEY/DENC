@@ -11,19 +11,24 @@ $intro = '
  *	Free, Fast, Simple and Mass file encryption and decryption Tool
  *	 	using AES 256 CBC encryption.
  *
- *	Usage 	: >php denc.php dec|enc <password> <regex_pattern>
+ *	Usage: 	  >php denc.php --method dec|enc --pass <password> --files <regex_pattern>
  *
- *	Example : >php denc.php enc testpass ./htdoc/*.html
- *			  >php denc.php dec otherpass home/txts/*.txt
- *			  >php denc.php enc anotherpass /web/backup.zip
+ *	Example:  >php denc.php -m enc -p testpass -f ./htdoc/*.html
+ *			  >php denc.php -m dec -p otherpass -f home/txts/*.txt
+ *			  >php denc.php -=method enc --pass anotherpass --files /web/backup.zip
  *	
  *	!! NOTE : + NEVER DONT TRY TO DELETE `.dont-remove.conf` FILES IN
  * 		   		WORKING DIRCTORIES.
- *		   + WE DONT ACCEPT ANY RESPONSIBILITY OF ANY KIND OF FILE
- *		   		LOSING WHILE USING THIS SCRYPT.
+ *		   	  + WE DONT ACCEPT ANY RESPONSIBILITY OF ANY KIND OF DATA
+ *		   		FILES LOST WHILE USING THIS SCRYPT.
  * 	Coded BY : GitHub.com/SaeedEY
  *
  * 	[latest]
+ *	Version 1.3
+ *		+ colorizes the output log
+ *		+ change the input arguments structure
+ *		+ fix a non-existed files bug
+ *******************************************************************
  *	Version 1.2
  *		+ target file suppose to have a valid length 
  *			not the zero , then its allowed to remove the source file
@@ -37,7 +42,7 @@ $intro = '
  *******************************************************************
  * 	MIT License
  *
- *	Copyright (c) 2020 SaeedEY
+ *	Copyright (c) 2021 SaeedEY
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -104,12 +109,12 @@ function keepLastModifiedTime(string &$source_file_path,string &$target_file_pat
  *	The CLI Countdown to inform the user for source file removing
  */
 function rmCountDown(int $time_by_second=5) {
-	echo "\tRemoving orginal File on ";
+	echo "\t\033[91mRemoving orginal File on ";
 	for(;$time_by_second>0;$time_by_second--){
-		echo $time_by_second."\t";
+		echo $time_by_second." ";
 		sleep(1);
 	}
-	echo "\n";
+	echo "\033[0m\n";
 }
 
 /**
@@ -170,7 +175,7 @@ function getFilesByRegex(string &$regex) : array{
  *	Encrypting function
  */
 function Encrypt(string &$file_path,string &$password){
-	echo "Waiting : file '$file_path' encryption in process !\n";
+	echo "\033[97mWaiting : file '$file_path' encryption in process !\033[0m\n";
 	list($directory,$file_name) = fileProperties($file_path);
 	if(!file_exists($directory."\\".PREFIX.$file_name)){
 		$file_raw = file_get_contents($file_path);
@@ -178,7 +183,7 @@ function Encrypt(string &$file_path,string &$password){
 		if(isCryptionKeyValid($file_path, md5($file_raw))){
 			$encrypted_path = $directory."\\".PREFIX.$file_name;
 			file_put_contents($encrypted_path, $encrypted_raw);
-			echo "Success : File '$file_path' encrypted !\n";
+			echo "\033[32mSuccess : File '$file_path' encrypted !\033[0m\n";
 			unset($encrypted_raw);
 			keepLastModifiedTime($file_path,$encrypted_path);
 			rmCountDown();
@@ -186,21 +191,22 @@ function Encrypt(string &$file_path,string &$password){
 			# Deleting Original File
 			if(file_exists($file_path) && filesize($encrypted_path) > 0){
 				@unlink($file_path);
-				echo "Caution : The raw file '$file_path' has been deleted !\n";
+				echo "\t\033[33mCaution : The raw file '$file_path' has been deleted !\033[0m\n";
 			}
 		}else{
-			echo "Warning : File '$file_path' could not be encrypted !\n";
+			echo "\t\033[31mWarning : File '$file_path' could not be encrypted !\033[0m\n";
 		}
 		unset($file_raw);
 	}else
-		echo "Warning : File '$file_path' also encrypted !\n";
+		echo "\t\033[31mWarning : File '$file_path' also encrypted !\033[0m\n";
+	echo "-\t-\t-\t-\t-\t-\t-\t-\n";
 }
 
 /**
  *	Decrypting function
  */
 function Decrypt(&$crypted_file_path,&$password){
-	echo "Waiting : file '$crypted_file_path' decryption in process !\n";
+	echo "\033[97mWaiting : file '$crypted_file_path' decryption in process !\033[0m\n";
 	list($directory,$crypted_file_name) = fileProperties($crypted_file_path);
 	if(strpos($crypted_file_name, PREFIX) === 0){
 		$decrypted_file_name = substr($crypted_file_name, strlen(PREFIX));
@@ -210,7 +216,7 @@ function Decrypt(&$crypted_file_path,&$password){
 		if(isCryptionKeyValid($directory."\\".$decrypted_file_name,md5($decrypted))){
 			$decrypted_path = $directory."\\".$decrypted_file_name;
 			file_put_contents($decrypted_path, $decrypted);
-			echo "Success : File '$crypted_file_path' decrypted !\n";
+			echo "\033[32mSuccess : File '$crypted_file_path' decrypted !\033[0m\n";
 			unset($decrypted);
 			keepLastModifiedTime($crypted_file_path,$decrypted_path);
 			rmCountDown();
@@ -218,35 +224,51 @@ function Decrypt(&$crypted_file_path,&$password){
 			# Deleting Original File
 			if(file_exists($crypted_file_path) &&  filesize($decrypted_path) > 0){
 				@unlink($crypted_file_path);
-				echo "Caution : The crypted file '$crypted_file_path' has been deleted !\n";
+				echo "\t\033[33mCaution : The crypted file '$crypted_file_path' has been deleted !\033[0m\n";
 			}
 		}else
-			echo "Warning : File '$crypted_file_path' decryption failed !\n";
+			echo "\t\033[31mWarning : File '$crypted_file_path' decryption failed !\033[0m\n";
 	}else
-		echo "Warning : File '$crypted_file_path' also decrypted !\n";	
+		echo "\t\033[31mWarning : File '$crypted_file_path' also decrypted !\033[0m\n";
+	echo "-\t-\t-\t-\t-\t-\t-\t-\n";	
 }
 
 #######################
 /**
  *	Running commands
  */
-if(count($argv) != 4){
+if(count($argv) != 7){
+	echo "Error : Not all the reqired fileds passed !\n" ;
 	die($intro);
 }
 
-switch (strtolower($argv[1])) {
+$args = (object)[ "method" => "", "pass" => "", "files" => "" ];
+
+foreach ($argv as $key => $arg){
+	if(($arg == "--method" or $arg == "-m") and isset($argv[$key+1]) and strpos($argv[$key+1], "-") !== 0)
+		$args->method = $argv[$key+1];
+	elseif(($arg == "--pass" or $arg == "-p") and isset($argv[$key+1]) and strpos($argv[$key+1], "-") !== 0)
+		$args->pass = $argv[$key+1];
+	elseif(($arg == "--files" or $arg == "-f") and isset($argv[$key+1]) and strpos($argv[$key+1], "-") !== 0)
+		$args->files = (array)getFilesByRegex($argv[$key+1]);
+}
+
+if(empty($args->files))
+	die("Fault : No existing file has given !");
+
+switch (strtolower($args->method)) {
 	case 'enc':
-		echo "Encryption has Started .... \n";
-		foreach (getFilesByRegex($argv[3]) as $f) 
-			Encrypt($f,$argv[2]);
+		echo "\033[34mEncryption has Started .... \033[0m\n";
+		foreach ($args->files as $f)
+			Encrypt($f,$args->pass);
 		break;
 	case 'dec':
-		echo "Decryption has Started .... \n";
-		foreach (getFilesByRegex($argv[3]) as $f) 
-			Decrypt($f,$argv[2]);
+		echo "\033[34mDecryption has Started .... \033[0m\n";
+		foreach ($args->files as $f) 
+			Decrypt($f,$args->pass);
 		break;
 	default:
-		die("Fault : Method '$m' undefined!");
+		die("Fault : Method '{$args->method}' undefined!");
 		break;
 }
 
