@@ -22,7 +22,7 @@ New Feature : Performing better interact cli.
 # Example : 
 	>>php denc.php -m enc -p testpass -f ./htdoc/*.html
 	>>php denc.php -m dec -p otherpass -f /home/txts/*.txt
-	>>php denc.php -=method enc --pass anotherpass --files /web/backup_*.zip
+	>>php denc.php --method enc --pass anotherpass --files /web/backup_*.zip
 
 # NOTE : 
 	+ NEVER DONT TRY TO DELETE `.dont-remove.conf` FILES IN WORKING DIRCTORIES.
